@@ -18,7 +18,7 @@
     </head>
 
     <body>
-        <h1>Phone Database</h1>
+        <h1>Phone Database Search</h1>
 
         <hr />
 
@@ -36,6 +36,7 @@
                         <option value="oneplus">OnePlus</option>
                         <option value="google">Google</option>
                         <option value="nokia">Nokia</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
             </div>
@@ -72,9 +73,12 @@
             </div>
 
             <div class="row mb-3">
-                <div class="col-md-12">
-                    <button id="search">Search for Phones</button>
+                <div class="col-2">
+                    <button id="search">Search</button>
                 </div>
+                <div class="col-2">
+                    <button id="form">Add a Phone</button>
+                </div>  
             </div>
         </div>
 
@@ -84,6 +88,13 @@
 
         <script>
             const isEmpty = (obj) => Object.keys(obj).length === 0;
+
+            //Event listener for form button
+            document
+                .getElementById("form")
+                .addEventListener("click", (event) => {
+                    window.location.href = "Form/form.html";
+                });
 
             document
                 .getElementById("search")
@@ -197,6 +208,7 @@
                                             "</td>" +
                                             "<td>" +
                                             row.gpu +
+                                            
                                             "</td>" +
                                             "<td>" +
                                             row.battery +
