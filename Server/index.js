@@ -15,6 +15,7 @@ const connection = mysql.createConnection({
   database: "THERONLINDSAY",
 });
 
+
 //The * in app.* needs to match the method type of the request
 app.post("/", upload.none(), 
 
@@ -56,38 +57,40 @@ check('price', 'Enter the price.').isInt(),
     queryParameters.push(request.body.year);
     queryParameters.push(request.body.price);
     console.log(insertSql);
-  } else if (request.body.operation === "fetch_phone") {
-      let row = request.body.id;
-      let selectSql = `SELECT * FROM Phones WHERE id = ?`;
-      queryParameters.push(row);
-      console.log(selectSql);
-  }
 
-  connection.query(insertSql, queryParameters, (error, result) => {
+    //Add values to the database
+    connection.query(insertSql, queryParameters, (error, result) => {
     
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-      return response
-          .status(400)
-          .setHeader('Access-Control-Allow-Origin', '*') //Prevent CORS error
-          .json({
-              message: 'Request fields or files are invalid.',
-              errors: errors.array(),
-              
-          });
-    } else {
-      //Default response object
-      return response
-        .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
-        .json({ message: "Phone added successfully." });
-    }
-  });
+      const errors = validationResult(request);
+      if (!errors.isEmpty()) {
+        return response
+            .status(400)
+            .setHeader('Access-Control-Allow-Origin', '*') //Prevent CORS error
+            .json({
+                message: 'Request fields or files are invalid.',
+                errors: errors.array(),
+                
+            });
+      } else {
+        //Default response object
+        return response
+          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+          .json({ message: "Phone added successfully." });
+      }
+    });
+    
+  } else if (request.body.operation === "fetch_phone") {
+    let row = request.body.id;
+    let selectSql = `SELECT * FROM Phones WHERE id = ?`;
+    queryParameters.push(request.body.id);
+    console.log(selectSql);
 
-
-  if(request.body.operation === "fetch_phone"){
     //Find brand id
     let brand = request.body.brand;
-    switch (brand) {
+    editId = request.body.id;
+
+    switch (brand) 
+    {
       case "apple":
         brand_id = 1;
         break;
@@ -110,6 +113,60 @@ check('price', 'Enter the price.').isInt(),
         brand_id = 0;
         break;
     }
+
+    //Find the phone
+    connection.query(selectSql, queryParameters, (error, result) => {
+      if (error) {
+        console.log(error);
+        return response
+          .status(500) //Error code when something goes wrong with the server
+          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+          .json({ message: "Something went wrong with the server." });
+      } else {
+        //Default response object
+        response
+          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+          .json({ data: result });
+      }
+    });
+
+    // Edit Operations
+  } else if (request.body.operation === "edit") {
+
+    //UPDATE statement variables
+    let updateSql = `UPDATE Phones SET brand_id = ?, name = ?, model = ?, colors = ?, memory_gb = ?, storage_gb = ?, rear_camera_mp = ?, front_camera_mp = ?, cpu = ?, gpu = ?, battery = ?, release_year = ?, price = ? WHERE id = ?`;
+    let queryParameters = [];
+    queryParameters.push(request.body.brand_id);
+    queryParameters.push(request.body.name);
+    queryParameters.push(request.body.model);
+    queryParameters.push(request.body.colors);
+    queryParameters.push(request.body.ram);
+    queryParameters.push(request.body.storage);
+    queryParameters.push(request.body.rearcam);
+    queryParameters.push(request.body.frontcam);
+    queryParameters.push(request.body.cpu);
+    queryParameters.push(request.body.gpu);
+    queryParameters.push(request.body.battery);
+    queryParameters.push(request.body.year);
+    queryParameters.push(request.body.price);
+    queryParameters.push(request.body.id);
+
+    console.log(updateSql);
+    connection.query(updateSql, queryParameters, (error, result) => {
+      if (error) {
+        console.log(error);
+        return response
+          .status(500) //Error code when something goes wrong with the server
+          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+          .json({ message: "Something went wrong with the server." });
+      } else {
+        //Default response object
+        response
+          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+          .json({ message: "Phone updated successfully." });
+      }
+    });
+
   } else { 
     //SELECT statement variables
     let selectSql = `SELECT
@@ -137,9 +194,8 @@ check('price', 'Enter the price.').isInt(),
       typeof request.body.brand_id !== "undefined" &&
       parseInt(request.body.brand_id) !== 0
     ) {
-      let brand = request.body.brand_id;
       whereStatements.push("brand_id = ?");
-      queryParameters.push(brand_id);
+      queryParameters.push(request.body.brand_id);
     }
 
     if (
@@ -205,44 +261,69 @@ check('price', 'Enter the price.').isInt(),
     });
   }
 
-  //Edit a phone
-  app.post("/edit", upload.none(), (request, response) => {
-    //UPDATE statement variables
-    let updateSql = `UPDATE Phones SET brand_id = ?, name = ?, model = ?, colors = ?, memory_gb = ?, storage_gb = ?, rear_camera_mp = ?, front_camera_mp = ?, cpu = ?, gpu = ?, battery = ?, release_year = ?, price = ? WHERE id = ?`;
-    let queryParameters = [];
-    queryParameters.push(request.body.brand_id);
-    queryParameters.push(request.body.name);
-    queryParameters.push(request.body.model);
-    queryParameters.push(request.body.colors);
-    queryParameters.push(request.body.ram);
-    queryParameters.push(request.body.storage);
-    queryParameters.push(request.body.rearcam);
-    queryParameters.push(request.body.frontcam);
-    queryParameters.push(request.body.cpu);
-    queryParameters.push(request.body.gpu);
-    queryParameters.push(request.body.battery);
-    queryParameters.push(request.body.year);
-    queryParameters.push(request.body.price);
-    queryParameters.push(request.body.id);
+  
 
-    console.log(updateSql);
-    connection.query(updateSql, queryParameters, (error, result) => {
-      if (error) {
-        console.log(error);
-        return response
-          .status(500) //Error code when something goes wrong with the server
-          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
-          .json({ message: "Something went wrong with the server." });
-      } else {
-        //Default response object
-        response
-          .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
-          .json({ message: "Phone updated successfully." });
-      }
-    });
+  
+});
+
+//Edit a phone
+app.post("/edit", upload.none(),
+  
+//validation
+check('brand_id', 'Please enter a brand').isInt(),
+check('name', 'Please enter a name').isLength({ min: 1 }),
+check('model', 'Please enter a model').isLength({ min: 1 }),
+check('colors', 'Please enter a color').isLength({ min: 1 }),
+check('ram', 'Enter an amount of RAM').isInt(),
+check('storage', 'Enter how much storage').isInt(),
+check('rearcam', 'Enter the amount of MP of the rear camera has.').isInt(),
+check('frontcam', 'Please enter how many MP the front camera has.').isInt(),
+check('cpu', 'Enter the CPU name').isLength({ min: 1 }),
+check('gpu', 'Enter the GPU Name').isLength({ min: 1 }),
+check('battery', 'Enter the battery name').isInt(),
+check('year', 'Enter the release year of the phone').isInt(),
+check('price', 'Enter the price.').isInt(),
+
+(request, response) => {
+  //UPDATE statement variables
+  let updateSql = `UPDATE Phones SET brand_id = ?, name = ?, model = ?, colors = ?, memory_gb = ?, storage_gb = ?, rear_camera_mp = ?, front_camera_mp = ?, cpu = ?, gpu = ?, battery = ?, release_year = ?, price = ? WHERE id = ?`;
+  const queryParameters = [];
+  queryParameters.push(request.body.brand_id);
+  queryParameters.push(request.body.name);
+  queryParameters.push(request.body.model);
+  queryParameters.push(request.body.colors);
+  queryParameters.push(request.body.ram);
+  queryParameters.push(request.body.storage);
+  queryParameters.push(request.body.rearcam);
+  queryParameters.push(request.body.frontcam);
+  queryParameters.push(request.body.cpu);
+  queryParameters.push(request.body.gpu);
+  queryParameters.push(request.body.battery);
+  queryParameters.push(request.body.year);
+  queryParameters.push(request.body.price);
+  queryParameters.push(request.body.id);
+
+  console.log(updateSql);
+
+  connection.query(updateSql, queryParameters, (errors, result) => {
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return response
+        .status(400) //Error code when something goes wrong with the server
+        .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+        .json({ message: "Something went wrong with the server." });
+    } else {
+      //Default response object
+      return response
+        .setHeader("Access-Control-Allow-Origin", "*") //Prevent CORS error
+        .json({ message: "Phone updated successfully.", 
+        errors: errors.array() });
+    }
   });
 
-  app.listen(port, () => {
-    console.log(`Application listening at http://localhost:${port}`);
-  });
+  editId = 0;
+});
+
+app.listen(port, () => {
+  console.log(`Application listening at http://localhost:${port}`);
 });

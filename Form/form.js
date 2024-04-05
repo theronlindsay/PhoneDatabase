@@ -4,6 +4,43 @@ const successBanner = document.getElementById("valid-form");
 errorBanner.hidden = true;
 successBanner.hidden = true;
 let editFlag = false;
+let editId = 0;
+
+//Custom method for FETCH API functionality 
+const fetchMethod = (url, fetchParameters, callback) => {
+    fetch(url, fetchParameters)
+        .then((response) => {
+            return new Promise((resolve) => response.json()
+                .then((json) => resolve({
+                    status: response.status,
+                    json,
+                })
+            ));
+        })
+        .then(({status, json}) => {
+            callback(status, json);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+};
+
+//Clear form function
+function clearForm() {
+    document.getElementById("brand").value = "";
+    document.getElementById("name").value = "";
+    document.getElementById("model").value = "";
+    document.getElementById("colors").value = "";
+    document.getElementById("ram").value = "";
+    document.getElementById("storage").value = "";
+    document.getElementById("rearcam").value = "";
+    document.getElementById("frontcam").value = "";
+    document.getElementById("cpu").value = "";
+    document.getElementById("gpu").value = "";
+    document.getElementById("battery").value = "";
+    document.getElementById("year").value = "";
+    document.getElementById("price").value = "";
+}
 
 function displayTable(){ 
 
@@ -122,6 +159,7 @@ displayTable();
 document.getElementById("submit")
   .addEventListener("click", (event) => {
 
+
     let brand = document.getElementById("brand").value;
     let name = document.getElementById("name").value;
     let model = document.getElementById("model").value;
@@ -138,8 +176,6 @@ document.getElementById("submit")
 
     //Create a new FormData object
     const formData = new FormData();
-
-        formData.append("operation", "add");
         formData.append("limit", 100);
         switch(brand) {
             case "apple":
@@ -179,8 +215,10 @@ document.getElementById("submit")
         formData.append("price", price);
         if (editFlag) {
             formData.append("operation", "edit");
-            formData.append("id", id);
+            formData.append("id", editId);
             editFlag = false;
+        } else {
+            formData.append("operation", "add");
         }
 
         //Settings for FETCH API request
@@ -206,19 +244,19 @@ document.getElementById("submit")
 
                 //Error handling
                 const errorMessages = document.getElementsByClassName("text-danger");
-                //console.log(errorMessages);
+                console.log(errorMessages);
                 errorBanner.hidden = true;
                 for (htmlElement of errorMessages) {
                     htmlElement.innerHTML = "&nbsp;";
                 }
-                if (status === 400) {
+                if (status === 400 || status === 500) {
                     errorBanner.innerText =
                     "Form has errors. Please correct them and resubmit.";
                     errorBanner.hidden = false;
                         for (error of json.errors) {
-                        //console.log(error);
+                        console.log(error);
                         const errorId = error.path + "-error";
-                        //console.log(errorId);
+                        console.log(errorId);
                         document.getElementById(errorId).innerHTML = error.msg;
                     }
                 } else {
@@ -226,6 +264,7 @@ document.getElementById("submit")
                     errorBanner.hidden = true;
                     successBanner.hidden = false;
                     displayTable();
+                    clearForm();
                 }
 
                 if (status === 200) {
@@ -244,9 +283,13 @@ document.getElementById("submit")
 
 //When edit button is clicked, send a fetch request
 document.getElementById("phones").addEventListener("click", (event) => {
+
+    editFlag = true;
+
     if (event.target.id === "edit") {
         console.log(event.target.value);
         let id = event.target.value;
+        editId = id;
 
         let formData = new FormData();
         formData.append("id", id);
