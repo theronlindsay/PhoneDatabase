@@ -21,7 +21,7 @@ if (urlParams.has("id")) {
     }
 
     //Send a fetch request to get the data for the phone
-    fetch("http://localhost/classes/" + id, fetchSettings)
+    fetch("http://localhost/phones/" + id, fetchSettings)
         .then((response) => {
             return new Promise((resolve) =>
                 response.json().then((json) =>
@@ -115,7 +115,7 @@ document.getElementById("submit")
         formData.append("year", year);
         formData.append("price", price);
         console.log(formData);
-        let fetchURL = "http://localhost/classes/";
+        let fetchURL = "http://localhost/phones/";
         let fetchSettings;
         if (editFlag) {
 

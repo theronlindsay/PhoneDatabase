@@ -1,7 +1,7 @@
 //Libraries
 const express = require("express");
 const multer = require("multer");
-const classes = require("./Model/classes");
+const phones = require("./Model/phones");
 const mysql = require("mysql2"); 
 const { check, validationResult } = require("express-validator");
 
@@ -19,11 +19,11 @@ const upload = multer();
 const port = 80; //Default port to http server
 app.use(express.static("View")); //Serve static files from the View folder
 
-//JSON of classes from the database
-app.get("/classes/", upload.none(), async (request, response) => {
+//JSON of phones from the database
+app.get("/phones/", upload.none(), async (request, response) => {
     //SELECT statement variables
     try {
-      const result = await classes.selectAllRows(request); //Get all rows from the Phones table
+      const result = await phones.selectAllRows(request); //Get all rows from the Phones table
       return response.json({data: result}); //Return the data as a JSON object  
       
     } catch (error) {
@@ -35,10 +35,10 @@ app.get("/classes/", upload.none(), async (request, response) => {
 });
 
 //JSON of a class from the database
-app.get("/classes/:id", upload.none(), async (request, response) => {
+app.get("/phones/:id", upload.none(), async (request, response) => {
     //SELECT statement variables
     try {
-      const result = await classes.selectById(request); //Get row from the Phones table by ID
+      const result = await phones.selectById(request); //Get row from the Phones table by ID
       return response.json({data: result}); //Return the data as a JSON object  
       
     } catch (error) {
@@ -50,7 +50,7 @@ app.get("/classes/:id", upload.none(), async (request, response) => {
 });
 
 //Add a new phone to the database
-app.post("/classes/", upload.none(),
+app.post("/phones/", upload.none(),
   check("brand_id").isInt(),
   check("name").isString().isLength({min:1}),
   check("model").isString().isLength({min:1}),
@@ -81,7 +81,7 @@ app.post("/classes/", upload.none(),
     } else {
       //INSERT statement variables
       try {
-        const result = await classes.addRow(request.body); //Insert a new row into the Phones table
+        const result = await phones.addRow(request.body); //Insert a new row into the Phones table
         return response.json({data: result}); //Return the data as a JSON object  
         
       } catch (error) {
@@ -95,7 +95,7 @@ app.post("/classes/", upload.none(),
 );
 
 //Update a phone in the database
-app.put("/classes/:id", upload.none(),
+app.put("/phones/:id", upload.none(),
   check("brand_id").isInt(),
   check("name").isString().isLength({min:1}),
   check("model").isString().isLength({min:1}),
@@ -126,7 +126,7 @@ app.put("/classes/:id", upload.none(),
 
       //UPDATE statement variables
       try {
-        const result = await classes.updateRow(request); //Update a row in the Phones table by ID
+        const result = await phones.updateRow(request); //Update a row in the Phones table by ID
         return response.json({data: result}); //Return the data as a JSON object  
         
       } catch (error) {
@@ -140,11 +140,11 @@ app.put("/classes/:id", upload.none(),
 );
 
 //Delete a phone from the database
-app.delete("/classes/:id", upload.none(), async (request, response) => {
+app.delete("/phones/:id", upload.none(), async (request, response) => {
     //DELETE statement variables
     console.log(request.params.id)
     try {
-      const result = await classes.deleteRow(request.params.id); //Delete a row from the Phones table by ID
+      const result = await phones.deleteRow(request.params.id); //Delete a row from the Phones table by ID
       return response.json({data: result}); //Return the data as a JSON object  
       
     } catch (error) {

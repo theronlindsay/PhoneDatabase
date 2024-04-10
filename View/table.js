@@ -26,7 +26,7 @@ function displayTable() {
     };
     
     //Send FETCH API request
-    fetch("http://localhost/classes/" + (!isEmpty(queryParams) ? '?' + new URLSearchParams(queryParams) : ''), fetchSettings)
+    fetch("http://localhost/phones/" + (!isEmpty(queryParams) ? '?' + new URLSearchParams(queryParams) : ''), fetchSettings)
         .then((response) => {
             return new Promise((resolve) =>
                 response.json().then((json) =>
