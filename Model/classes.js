@@ -78,7 +78,8 @@ async function updateRow(parameters = {}) {
 
 async function deleteRow(parameters = {}) {
     const sqlStatement = "DELETE FROM Phones WHERE id = ?";
-    const queryParameters = [parameters.id];
+    const queryParameters = [parameters];
+    return await connection.query(sqlStatement, queryParameters);
 }
 
 module.exports = {

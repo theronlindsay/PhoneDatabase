@@ -118,6 +118,9 @@ function displayTable() {
                             '<a href ="./Form/form.html?id=' +
                             row.phone_id +
                             `">Edit</a>` +
+                            ' <a href ="./delete.html?id=' +
+                            row.phone_id +
+                            `">Delete</a>` +
                             "</td>" +
                             "</tr>";
                     }
@@ -132,36 +135,3 @@ function displayTable() {
         });
     return;
 }
-
-// //When edit button is clicked, send a fetch request
-// document.getElementById("phones").addEventListener("click", (event) => {
-   
-//     console.log(event.target.value);
-//     let id = event.target.value;
-
-//     let fetchSettings = {
-//         method:"GET",
-//     };
-
-//     fetch("http://localhost/classes/" + id, fetchSettings)
-//     .then((response) => {
-//         return new Promise((resolve) => response.json()
-//             .then((json) => resolve({
-//                 status: response.status,
-//                 json,
-//             })
-//         ));
-//     })
-//     //logic to display errors on form
-//     .then(({status, json}) => {
-//         if(status === 200) {
-//             //change window to form.html/?=id
-//             window.location.href = "form.html?id=" + id;
-//         }
-//     })
-//     .catch((error) => {
-//         console.error("Error:", error);
-//     });
-
-    
-// });
