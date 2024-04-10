@@ -6,6 +6,55 @@ successBanner.hidden = true;
 let editFlag = false;
 
 
+//Search parameters for editing
+const urlParams = new URLSearchParams(window.location.search);
+
+//If there is an ID in the URL, set the editFlag to true
+let id;
+if (urlParams.has("id")) {
+    editFlag = true;
+    id = urlParams.get("id");
+
+    //Setttings for FETCH API request
+    let fetchSettings = {
+        method: "GET",
+    }
+
+    //Send a fetch request to get the data for the phone
+    fetch("http://localhost/classes/" + id, fetchSettings)
+        .then((response) => {
+            return new Promise((resolve) =>
+                response.json().then((json) =>
+                    resolve({
+                        status: response.status,
+                        json,
+                    }),
+                ),
+            );
+        }).then(({ status, json }) => {
+            if (status === 200) {
+                console.log(json.data);
+                //Display the data in the form
+                document.getElementById("brand").value = json.data[0].brand.toLowerCase();
+                document.getElementById("name").value = json.data[0].name;
+                document.getElementById("model").value = json.data[0].model;
+                document.getElementById("colors").value = json.data[0].colors;
+                document.getElementById("ram").value = json.data[0].memory_gb;
+                document.getElementById("storage").value = json.data[0].storage_gb;
+                document.getElementById("rearcam").value = json.data[0].rear_camera_mp;
+                document.getElementById("frontcam").value = json.data[0].front_camera_mp;
+                document.getElementById("cpu").value = json.data[0].cpu;
+                document.getElementById("gpu").value = json.data[0].gpu;
+                document.getElementById("battery").value = json.data[0].battery;
+                document.getElementById("year").value = json.data[0].year;
+                document.getElementById("price").value = json.data[0].price;
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+}
+
 //When submit button is clicked, send a fetch request
 document.getElementById("submit")
   .addEventListener("click", (event) => {
@@ -23,12 +72,12 @@ document.getElementById("submit")
     let battery = document.getElementById("battery").value;
     let year = document.getElementById("year").value;
     let price = document.getElementById("price").value;
+    let brand_id;
 
     //Create a new FormData object
     const formData = new FormData();
 
         formData.append("operation", "add");
-        formData.append("limit", 100);
         switch(brand) {
             case "apple":
                 brand_id = 1;
@@ -65,20 +114,29 @@ document.getElementById("submit")
         formData.append("battery", battery);
         formData.append("year", year);
         formData.append("price", price);
+        console.log(formData);
+        let fetchURL = "http://localhost/classes/";
+        let fetchSettings;
         if (editFlag) {
-            formData.append("operation", "edit");
-            formData.append("id", id);
-            editFlag = false;
+
+            fetchURL += id; //Add the ID to the URL
+
+            //Settings for FETCH API request
+            fetchSettings = {
+                method: "PUT",
+                body: formData,
+            };
+        } else{
+             //Settings for FETCH API request
+            fetchSettings = {
+                method: "POST",
+                body: formData,
+            };
         }
 
-        //Settings for FETCH API request
-        let fetchSettings = {
-            method: "POST",
-            body: formData,
-        };
-
+       
         //Send FETCH API request
-        fetch("http://localhost/", fetchSettings)
+        fetch(fetchURL, fetchSettings)
             .then((response) => {
                 return new Promise((resolve) =>
                     response.json().then((json) =>
@@ -100,27 +158,21 @@ document.getElementById("submit")
                     htmlElement.innerHTML = "&nbsp;";
                 }
                 if (status === 400) {
-                    errorBanner.innerText =
-                    "Form has errors. Please correct them and resubmit.";
+                    errorBanner.innerText = "Form has errors. Please correct them and resubmit.";
                     errorBanner.hidden = false;
-                        for (error of json.errors) {
+                    for (error of json.errors) {
                         //console.log(error);
                         const errorId = error.path + "-error";
                         //console.log(errorId);
                         document.getElementById(errorId).innerHTML = error.msg;
                     }
+                } else if (status === 500){
+                    errorBanner.innerText = "Server error. Please try again later.";
+                    errorBanner.hidden = false;
                 } else {
-                    successBanner.innerText = "Form is valid. Thank you for submitting.";
-                    errorBanner.hidden = true;
+                    successBanner.innerText = "Form submitted successfully.";
                     successBanner.hidden = false;
-                    displayTable();
-                }
-
-                if (status === 200) {
-                    //handle adding the new product to the list
-                        console.log("Form is valid. Thank you for submitting.");
-                        successBanner.hidden = false;
-                        errorBanner.hidden = true;
+                    window.location.href = "../index.html";
                 }
             })
             .catch((error) => {

@@ -33,10 +33,11 @@ app.get("/classes/", upload.none(), async (request, response) => {
   }
 });
 
+//JSON of a class from the database
 app.get("/classes/:id", upload.none(), async (request, response) => {
   //SELECT statement variables
   try {
-    const result = await classes.selectById(request); //Get all rows from the Phones table
+    const result = await classes.selectById(request); //Get row from the Phones table by ID
     return response.json({data: result}); //Return the data as a JSON object  
     
   } catch (error) {
@@ -46,6 +47,37 @@ app.get("/classes/:id", upload.none(), async (request, response) => {
       .json({message: "Something went wrong with the server."});
   }
 });
+
+//Add a new phone to the database
+app.post("/classes/", upload.none(), async (request, response) => {
+  //INSERT statement variables
+  try {
+    const result = await classes.addRow(request.body); //Insert a new row into the Phones table
+    return response.json({data: result}); //Return the data as a JSON object  
+    
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({message: "Something went wrong with the server."});
+  }
+});
+
+//Update a phone in the database
+app.put("/classes/:id", upload.none(), async (request, response) => {
+  //UPDATE statement variables
+  try {
+    const result = await classes.updateRow(request); //Update a row in the Phones table by ID
+    return response.json({data: result}); //Return the data as a JSON object  
+    
+  } catch (error) {
+    console.error(error);
+    return response
+      .status(500)
+      .json({message: "Something went wrong with the server."});
+  }
+});
+
 
 
 

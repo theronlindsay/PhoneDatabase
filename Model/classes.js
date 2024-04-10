@@ -58,21 +58,21 @@ async function selectAllRows(parameters = {}) {
 }
 
 async function selectById(parameters = {}) {
-    const sqlStatement = "SELECT * FROM Phones WHERE id = ?";
+    const sqlStatement = `SELECT p.id AS phone_id, b.id AS brand_id, p.*, b.* FROM Phones p INNER JOIN Brands b ON p.brand_id = b.id WHERE p.id = ?`;
     console.log(parameters.params.id);
     const queryParameters = [parameters.params.id];
     return await connection.query(sqlStatement, queryParameters);
 }
 
 async function addRow(parameters = {}) {
-    const sqlStatement = "INSERT INTO Phones (brand_id, name, release_year, price) VALUES (?, ?, ?, ?)";
-    const queryParameters = [parameters.brand_id, parameters.name, parameters.release_year, parameters.price];
+    const sqlStatement = `INSERT INTO Phones (brand_id, name, release_year, price, model, colors, memory_gb, storage_gb, front_camera_mp, rear_camera_mp, cpu, gpu, battery) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const queryParameters = [parameters.brand_id, parameters.name, parameters.year, parameters.price, parameters.model, parameters.colors, parameters.ram, parameters.storage, parameters.frontcam, parameters.rearcam, parameters.cpu, parameters.gpu, parameters.battery];
     return await connection.query(sqlStatement, queryParameters);
 }
 
 async function updateRow(parameters = {}) {
-    const sqlStatement = "UPDATE Phones SET brand_id = ?, name = ?, release_year = ?, price = ? WHERE id = ?";
-    const queryParameters = [parameters.brand_id, parameters.name, parameters.release_year, parameters.price, parameters.id];
+    const sqlStatement = `UPDATE Phones SET brand_id = ?, name = ?, release_year = ?, price = ?, model = ?, colors = ?, memory_gb = ?, storage_gb = ?, front_camera_mp = ?, rear_camera_mp = ?, cpu = ?, gpu = ?, battery = ? WHERE id = ?`;
+    const queryParameters = [parameters.body.brand_id, parameters.body.name, parameters.body.year, parameters.body.price, parameters.body.model, parameters.body.colors, parameters.body.ram, parameters.body.storage, parameters.body.frontcam, parameters.body.rearcam, parameters.body.cpu, parameters.body.gpu, parameters.body.battery, parameters.params.id];
     return await connection.query(sqlStatement, queryParameters);
 }
 
