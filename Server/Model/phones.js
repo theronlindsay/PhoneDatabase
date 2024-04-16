@@ -57,10 +57,10 @@ async function selectAllRows(parameters = {}) {
     return await connection.query(sqlStatement, queryParameters);
 }
 
-async function selectById(parameters = {}) {
+async function selectById(id) {
     const sqlStatement = `SELECT p.id AS phone_id, b.id AS brand_id, p.*, b.* FROM Phones p INNER JOIN Brands b ON p.brand_id = b.id WHERE p.id = ?`;
-    console.log(parameters.params.id);
-    const queryParameters = [parameters.params.id];
+    console.log(id);
+    const queryParameters = [id];
     return await connection.query(sqlStatement, queryParameters);
 }
 
@@ -76,9 +76,9 @@ async function updateRow(parameters = {}) {
     return await connection.query(sqlStatement, queryParameters);
 }
 
-async function deleteRow(parameters = {}) {
+async function deleteRow(id) {
     const sqlStatement = "DELETE FROM Phones WHERE id = ?";
-    const queryParameters = [parameters];
+    const queryParameters = [id];
     return await connection.query(sqlStatement, queryParameters);
 }
 

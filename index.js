@@ -1,7 +1,7 @@
 //Libraries
 const express = require("express");
 const multer = require("multer");
-const phones = require("./Model/phones");
+const phones = require("./Server/Model/phones");
 const mysql = require("mysql2"); 
 const { check, validationResult } = require("express-validator");
 
@@ -17,8 +17,13 @@ const connection = mysql.createConnection({
 const app = express();
 const upload = multer();
 const port = 80; //Default port to http server
-app.use(express.static("View")); //Serve static files from the View folder
 
+//Load the GUI
+app.use(express.static("./Server/public/")); //Serve static files from the public folder
+
+//CRUD operations
+
+//Read
 //JSON of phones from the database
 app.get("/phones/", upload.none(), async (request, response) => {
     //SELECT statement variables
@@ -34,11 +39,13 @@ app.get("/phones/", upload.none(), async (request, response) => {
     }
 });
 
+//Read
 //JSON of a class from the database
 app.get("/phones/:id", upload.none(), async (request, response) => {
     //SELECT statement variables
+
     try {
-      const result = await phones.selectById(request); //Get row from the Phones table by ID
+      const result = await phones.selectById(request.params.id); //Get row from the Phones table by ID
       return response.json({data: result}); //Return the data as a JSON object  
       
     } catch (error) {
@@ -49,6 +56,7 @@ app.get("/phones/:id", upload.none(), async (request, response) => {
     }
 });
 
+//Create
 //Add a new phone to the database
 app.post("/phones/", upload.none(),
   check("brand_id").isInt(),
@@ -72,7 +80,6 @@ app.post("/phones/", upload.none(),
       
         return response
             .status(400)
-            .setHeader('Access-Control-Allow-Origin', '*') //Prevent CORS error
             .json({
                 message: 'Request fields or files are invalid.',
                 errors: errors.array(),
@@ -94,6 +101,7 @@ app.post("/phones/", upload.none(),
   }
 );
 
+//Update
 //Update a phone in the database
 app.put("/phones/:id", upload.none(),
   check("brand_id").isInt(),
@@ -116,7 +124,6 @@ app.put("/phones/:id", upload.none(),
     if (!errors.isEmpty()) {
         return response
             .status(400)
-            .setHeader('Access-Control-Allow-Origin', '*') //Prevent CORS error
             .json({
                 message: 'Request fields or files are invalid.',
                 errors: errors.array(),
@@ -139,6 +146,7 @@ app.put("/phones/:id", upload.none(),
   }
 );
 
+//Delete
 //Delete a phone from the database
 app.delete("/phones/:id", upload.none(), async (request, response) => {
     //DELETE statement variables
