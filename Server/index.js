@@ -1,7 +1,7 @@
 //Libraries
 const express = require("express");
 const multer = require("multer");
-const phones = require("./Server/Model/phones");
+const phones = require("./Model/phones");
 const mysql = require("mysql2"); 
 const { check, validationResult } = require("express-validator");
 
@@ -19,7 +19,7 @@ const upload = multer();
 const port = 80; //Default port to http server
 
 //Load the GUI
-app.use(express.static("./Server/public/")); //Serve static files from the public folder
+app.use(express.static("./Server/public")); //Serve static files from the public folder
 
 //CRUD operations
 
