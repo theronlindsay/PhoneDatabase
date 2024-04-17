@@ -1,5 +1,5 @@
 {
-    "name": "phone database",
+    "name": "phone-database",
     "version": "1.0.0",
     "description": "phone database",
     "main": "index.js",
