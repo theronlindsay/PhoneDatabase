@@ -9,59 +9,27 @@ body {
     color: white;
 }
 
+a {
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    text-align: center;
+    border: none;
+    background-color: #cc3545;
+    color: white;
+}
+
 /* For mobile phones: */
 [class*="col-"] {
     width: 100%;
 }
 
-@media only screen and (min-width: 768px) {
-    /* For desktop: */
-    .col-1 {
-        width: 8.33%;
-    }
-    .col-2 {
-        width: 16.66%;
-    }
-    .col-3 {
-        width: 25%;
-    }
-    .col-4 {
-        width: 33.33%;
-    }
-    .col-5 {
-        width: 41.66%;
-    }
-    .col-6 {
-        width: 50%;
-    }
-    .col-7 {
-        width: 58.33%;
-    }
-    .col-8 {
-        width: 66.66%;
-    }
-    .col-9 {
-        width: 75%;
-    }
-    .col-10 {
-        width: 83.33%;
-    }
-    .col-11 {
-        width: 91.66%;
-    }
-    .col-12 {
-        width: 100%;
-    }
-    body {
-        max-width: 100%;
-    }
-}
 
 /* Changed for less spacing */
 [class*="col-"] {
-    padding: 7px;
-    padding-left: 20px;
-    padding-right: 15px;
+    float: left;
+    padding-left: 7px;
+    padding-right: 5px;
 }
 
 .row::after {
@@ -107,10 +75,28 @@ h1 {
 button {
     width: 7em;
     height: 3em;
-    border-radius: 100em;
+    border-radius: 1em;
     text-align: center;
     border: none;
-    background-color: lightcoral;
+    background-color: rgb(56, 56, 56);
+    color: white;
+}
+
+.first-button {
+    border-radius: 1em 0em 0em 1em;
+}
+
+.second-button {
+    border-radius: 0em 1em 1em 0em;
+    background-color: rgb(30, 31, 28);
+}
+
+button:hover {
+    background-color: rgb(30, 31, 28);
+}   
+
+.second-button:hover {
+    background-color: rgb(30, 31, 28);
 }
 
 /* Table Styles: */
@@ -138,11 +124,108 @@ button {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #04aa6d;
+    background-color: #cc3545;
     color: white;
 }
 
 table {
     display: block;
     overflow-x: auto;
+}
+
+.mode-switcher {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    margin-top: 1em;
+    justify-content: center;
+    flex-direction: column;
+    place-items: flex-start;
+}
+
+table {
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    min-width: 80vw;
+}
+
+.row{
+    display: flex;
+    align-items: flex-start;
+    justify-self: center;
+    /* place-self: center; */
+}
+
+.delete-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    /* equal spacing */
+    gap: 1em;
+    text-align: center;
+}
+
+@media only screen and (min-width: 932px){
+
+    .container {
+        flex-direction: row;
+        place-items: center;
+    }
+}
+
+
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .col-1 {
+        width: 8.33%;
+    }
+    .col-2 {
+        width: 16.66%;
+    }
+    .col-3 {
+        width: 25%;
+    }
+    .col-4 {
+        width: 33.33%;
+    }
+    .col-5 {
+        width: 41.66%;
+    }
+    .col-6 {
+        width: 50%;
+    }
+    .col-7 {
+        width: 58.33%;
+    }
+    .col-8 {
+        width: 66.66%;
+    }
+    .col-9 {
+        width: 75%;
+    }
+    .col-10 {
+        width: 83.33%;
+    }
+    .col-11 {
+        width: 91.66%;
+    }
+    .col-12 {
+        width: 100%;
+    }
+    body {
+        max-width: 100%;
+    }
+    .row{
+        place-self: center;
+    }
 }

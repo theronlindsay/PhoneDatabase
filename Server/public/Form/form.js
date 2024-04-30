@@ -98,7 +98,7 @@ document.getElementById("submit")
                 brand_id = 6;
                 break;
             case "other":
-                brand_id = 0;
+                brand_id = 7;
                 break;
         }
         formData.append("brand_id", brand_id);

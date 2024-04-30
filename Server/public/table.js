@@ -44,20 +44,20 @@ function displayTable() {
                     "<table>" +
                     "<thead>" +
                     "<tr>" +
-                    '<th width="7%">ID</th>' +
+                    '<th width="2%">ID</th>' +
                     '<th width="7%">Brand</th>' +
                     '<th width="7%">Name</th>' +
                     '<th width="7%">Model</th>' +
-                    '<th width="10%">Colors</th>' +
-                    '<th width="7%">Max Memory</th>' +
-                    '<th width="7%">Max Storage</th>' +
-                    '<th width="7%">Rear Camera</th>' +
-                    '<th width="7%">Front Camera</th>' +
-                    '<th width="7%">CPU</th>' +
-                    '<th width="7%">GPU</th>' +
+                    '<th width="25%">Colors</th>' +
+                    '<th width="2%">Max Memory</th>' +
+                    '<th width="2%">Max Storage</th>' +
+                    '<th width="5%">Rear Camera</th>' +
+                    '<th width="5%">Front Camera</th>' +
+                    '<th width="12%">CPU</th>' +
+                    '<th width="10%">GPU</th>' +
                     '<th width="7%">Battery Capacity</th>' +
-                    '<th width="7%">Release Year</th>' +
-                    '<th width="7%">Price</th>' +
+                    '<th width="6%">Release Year</th>' +
+                    '<th width="4%">Price</th>' +
                     '<th width="7%">Edit</th>' +
                     "</tr>" +
                     "</thead>" +
@@ -115,12 +115,12 @@ function displayTable() {
                             row.price +
                             "</td>" +
                             "<td>" +
-                            '<a href ="./Form/form.html?id=' +
-                            row.phone_id +
-                            `">Edit</a>` +
-                            ' <a href ="./delete.html?id=' +
+                            '<a href ="./delete.html?id=' +
                             row.phone_id +
                             `">Delete</a>` +
+                            ' <a style = "background-color: #383838" href ="./Form/form.html?id=' +
+                            row.phone_id +
+                            `">Edit</a>` +
                             "</td>" +
                             "</tr>";
                     }
