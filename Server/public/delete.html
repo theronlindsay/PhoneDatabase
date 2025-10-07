@@ -39,7 +39,7 @@
         console.log(id);
 
         deleteButton.addEventListener('click', () => {
-            fetch('http://localhost/phones/' + id, {
+            fetch('/phones/' + id, {
                 method: 'DELETE',
             })
             .then(response => {

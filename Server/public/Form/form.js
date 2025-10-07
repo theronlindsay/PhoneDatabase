@@ -21,7 +21,7 @@ if (urlParams.has("id")) {
     }
 
     //Send a fetch request to get the data for the phone
-    fetch("http://localhost/phones/" + id, fetchSettings)
+    fetch("../../phones/" + id, fetchSettings)
         .then((response) => {
             return new Promise((resolve) =>
                 response.json().then((json) =>
