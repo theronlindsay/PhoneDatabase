@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
 //Setup defaults for script
 const app = express();
 const upload = multer();
-const port = 80; //Default port to http server
+const port = 3000; //Default port to http server
 
 //Load the GUI
 app.use(express.static("./Server/public")); //Serve static files from the public folder
